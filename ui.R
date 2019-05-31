@@ -22,7 +22,7 @@ shinyUI(fluidPage(
            checkboxInput("percentage", "Using percentages?", value = FALSE),
            textInput("anno1", "Annotation One"),
            actionButton("annoGo", "Enter Annotation", value = " "),
-           dateInput("event1", "Event One")),
+           dateInput("event1", "Date for Annotation")),
     
     
     # Show a plot of the generated distribution
