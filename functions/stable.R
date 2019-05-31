@@ -7,7 +7,7 @@
 # Param shiftsens is set at either "newshiftpos" to interrupt at any shift, or "newsusshiftpos" to interrupt at sustained shifts only
 
 
-RunChart = function(measure, subgroup, shiftsens) {
+RunChart = function(measure, subgroup, shiftsens, percentage) {
   
   dataDF = data.frame(measure,subgroup)%>%
     filter(!is.na(measure))%>%
@@ -63,7 +63,7 @@ RunChart = function(measure, subgroup, shiftsens) {
     #Calculate points above or below median and number each run
     dataDF$abovebelow = 0
     dataDF$abovebelow[dataDF$median == 0] = -1   # If the median is zero treat as below
-    dataDF$abovebelow[dataDF$median == 100] = 1 #If the median is 100 treat as above
+    if (percentage == TRUE) {dataDF$abovebelow[dataDF$median == 100] = 1} #If using percentages and the median is 100, treat as above
     dataDF$abovebelow[dataDF$measure < dataDF$median] = -1
     dataDF$abovebelow[dataDF$measure > dataDF$median] = 1
     

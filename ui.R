@@ -19,6 +19,7 @@ shinyUI(fluidPage(
            radioButtons("shiftsens", "Select sensitivity of rebase", c("Any shift" = "newshiftpos", 
                                                                        "Sustained shift" = "newsusshiftpos",
                                                                        "None" = "none")),
+           checkboxInput("percentage", "Using percentages?", value = FALSE),
            textInput("anno1", "Annotation One"),
            dateInput("event1", "Event One")),
     
