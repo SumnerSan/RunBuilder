@@ -40,31 +40,32 @@ shinyServer <- function(input, output) {
     
   })
   
-  heading <- reactive({
+  heading <- eventReactive(input$headingGo,{
     heading <- input$heading
-  })
+  }, ignoreNULL = FALSE)
   
-  xaxis <- reactive({
+  xaxis <- eventReactive(input$XGo,{
     xaxis <- input$xaxis
-  })
+  }, ignoreNULL = FALSE)
   
-  yaxis <- reactive({
+  yaxis <- eventReactive(input$YGo,{
     yaxis <- input$yaxis
-  })
+  }, ignoreNULL = FALSE)
   
   percentage <- reactive({
     percentage <- input$percentage
   })
   
-  anno1 <- reactive({
+  anno1 <- eventReactive(input$annoGo,{
     
-    if(is.null(input$anno1))
-    {return()}
+    # if(is.null(input$anno1))
+    # {return()}
+    # 
+    # else {
     
-    else {
-    
-    anno1 <- input$anno1}
-  })
+    anno1 <- input$anno1
+    #}
+  }, ignoreNULL = FALSE)
   
   event1 <- reactive({
     event1 <- input$event1

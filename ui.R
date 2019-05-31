@@ -21,6 +21,7 @@ shinyUI(fluidPage(
                                                                        "None" = "none")),
            checkboxInput("percentage", "Using percentages?", value = FALSE),
            textInput("anno1", "Annotation One"),
+           actionButton("annoGo", "Enter Annotation", value = " "),
            dateInput("event1", "Event One")),
     
     
@@ -32,7 +33,7 @@ shinyUI(fluidPage(
   
   
   fluidRow(column(3,downloadButton("pullchart", "Download chart")),
-           column(3,textInput("heading", "Title for your chart")),
-           column(3,textInput("xaxis", "X Axis Title")),
-           column(3,textInput("yaxis", "Y Axis Title"))
-  )))
+           column(3,textInput("heading", "Title for your chart", value =" "),actionButton("headingGo", "Enter Title")),
+           column(3,textInput("xaxis", "X Axis Title", value = " "), actionButton("XGo", "Enter X Axis")),
+           column(3,textInput("yaxis", "Y Axis Title", value = " "), actionButton("YGo", "Enter Y Axis")))
+  ))
