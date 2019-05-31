@@ -92,7 +92,7 @@ shinyServer <- function(input, output) {
     geom_point(aes(x = subgroup, y=measure, group = 1), colour = "#00a2e5", size = 2) +  
     geom_line(aes(x = subgroup, y=median, group = base_n), linetype = "longdash", colour = "#ffcd04") +
     geom_line(aes(x = subgroup, y=baselines, group = base_n), linetype = "solid", colour = "#ffcd04", size = 1) +
-    geom_point(aes(x = subgroup, y=highlight, group = 1), colour = " #ffcd04", size = 2) +
+    geom_point(aes(x = subgroup, y=highlight, group = 1), colour = "#ffcd04", size = 2) +
     geom_text(aes(x = subgroup, y = median, label = base_label), vjust = 1, hjust = 0) +
     geom_point(aes(x = subgroup, y=as.numeric(trendind), group = 1), shape = 1, size = 5, colour = "#007db3") +
     theme(axis.text.x=element_text(angle = 90, hjust = 0), panel.background = element_rect(fill = "transparent")) +
@@ -104,9 +104,9 @@ shinyServer <- function(input, output) {
     xlab(xaxis()) + ylab(yaxis()) +
     ggtitle(heading())+
     theme_classic()+
-    theme(plot.title = element_text(family = "TT arial", size = 14, face = "bold"),
-                   axis.title.x = element_text(family = "TT arial", size = 11, face = "bold"),
-                   axis.title.y = element_text(family = "TT arial", size = 11, face = "bold"))
+    theme(plot.title = element_text(size = 14, face = "bold"),
+                   axis.title.x = element_text(size = 11, face = "bold"),
+                   axis.title.y = element_text(size = 11, face = "bold"))
   }) # ggplot chart
   
   output$runchart <- renderPlot({
