@@ -23,7 +23,8 @@ shinyServer <- function(input, output) {
     ###WORK NEEDED: currently configured to Excel dates - needs work to accept different formats
     data <- data%>%
       mutate(date = as_date(as.POSIXct(as.numeric(date),origin = "1970-01-01", tz = "GMT")))%>%
-      arrange(date)
+      arrange(date)%>%
+      mutate(value = as.numeric(value))
       
   })
   

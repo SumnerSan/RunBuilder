@@ -11,6 +11,7 @@ RunChart = function(measure, subgroup, shiftsens, percentage) {
   
   dataDF = data.frame(measure,subgroup)%>%
     filter(!is.na(measure))%>%
+    mutate(measure = round(measure, 0))%>%
     arrange(subgroup)#Create dataframe from vector data
   
   ###Remove missing values and reintroduce later - these neither make nor break shifts 
