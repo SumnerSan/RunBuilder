@@ -11,7 +11,6 @@ RunChart = function(measure, subgroup, shiftsens, percentage) {
   
   dataDF = data.frame(measure,subgroup)%>%
     filter(!is.na(measure))%>%
-    mutate(measure = round(measure, 0))%>%
     arrange(subgroup)#Create dataframe from vector data
   
   ###Remove missing values and reintroduce later - these neither make nor break shifts 
@@ -65,8 +64,8 @@ RunChart = function(measure, subgroup, shiftsens, percentage) {
     dataDF$abovebelow = 0
     dataDF$abovebelow[dataDF$median == 0] = -1   # If the median is zero treat as below
     if (percentage == TRUE) {dataDF$abovebelow[dataDF$median == 100] = 1} #If using percentages and the median is 100, treat as above
-    dataDF$abovebelow[dataDF$measure < dataDF$median] = -1
-    dataDF$abovebelow[dataDF$measure > dataDF$median] = 1
+    dataDF$abovebelow[round(dataDF$measure,0) < dataDF$median] = -1
+    dataDF$abovebelow[round(dataDF$measure,0) > dataDF$median] = 1
     
     # Overwrite 12 values at shiftpos with non-useful values if not interrupting baseline
     if(shiftsens == "none") {
@@ -218,8 +217,8 @@ RunChart = function(measure, subgroup, shiftsens, percentage) {
 } # End of RunChart function
 
 
-##Debug script
-# 
-# FVCAM <- read_excel("~/MHAIST/Core/Runcharts/Own attempt/Autochart/data/FVCAM.xlsx")
+#Debug script
+ 
+# shift6 <- read_excel("C:/Users/tobyst01/Documents/MHAIST/D&G/PT/Listapp/Patch/upload.xlsx")
 # debugonce(RunChart)
-# RunChart(FVCAM$value, FVCAM$date, shiftsens = "none")
+# RunChart(shift6$value, shift6$date, percentage = TRUE, shiftsens = "newshiftpos")
