@@ -140,13 +140,13 @@ RunChart = function(measure, subgroup, shiftsens, percentage) {
     # (a) there are 12 data points (not counting blanks or NAs); and
     # (b) the 12 points are stable (i.e. no shifts starting within the 12 points)
     # (c) allow if 12 points start with a shift
-    if (shiftpos+11 <= length(dataDF$measure) & (shiftpos+11 < newshiftpos | newshiftpos == 1))
+    if (shiftpos+11 <= length(dataDF$measure) & (shiftpos+8 < newshiftpos | newshiftpos == 1))
     {dataDF$baselines[shiftpos:(shiftpos+11)] = dataDF$median[shiftpos:(shiftpos+11)]
     # Increment base_n to disconnect baselines
     base_n <- base_n + 1
     dataDF$base_n[shiftpos:length(dataDF$base_n)] = base_n
     # Label baseline
-    dataDF$base_label[shiftpos] = as.character(round(dataDF$median[shiftpos]),0)
+    dataDF$base_label[shiftpos] = as.character(round(dataDF$median[shiftpos],0))
     }
     
     # If rebase occurs over 9-11 points at end of dataframe, rebase as temporary
@@ -156,7 +156,7 @@ RunChart = function(measure, subgroup, shiftsens, percentage) {
     base_n <- base_n + 1
     dataDF$base_n[shiftpos:length(dataDF$base_n)] = base_n
     # Label baseline (Temporary)
-    dataDF$base_label[shiftpos] = paste0("Temporary: ", round(dataDF$median[shiftpos]),0)
+    dataDF$base_label[shiftpos] = paste0("Temporary: ", round(dataDF$median[shiftpos],0))
     break
     
     }
@@ -167,7 +167,7 @@ RunChart = function(measure, subgroup, shiftsens, percentage) {
       base_n <- base_n + 1
       dataDF$base_n[shiftpos:(newshiftpos - 1)] = base_n
       #Label baseline
-      dataDF$base_label[shiftpos] = paste0("Temporary: ", round(dataDF$median[shiftpos]),0)
+      dataDF$base_label[shiftpos] = paste0("Temporary: ", round(dataDF$median[shiftpos],0))
     }
     
     if (newshiftpos == 1) {
