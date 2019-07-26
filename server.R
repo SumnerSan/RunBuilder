@@ -41,15 +41,15 @@ shinyServer <- function(input, output) {
     
   })
   
-  heading <- eventReactive(input$headingGo,{
+  heading <- eventReactive(input$allGo,{
     heading <- input$heading
   }, ignoreNULL = FALSE)
   
-  xaxis <- eventReactive(input$XGo,{
+  xaxis <- eventReactive(input$allGo,{
     xaxis <- input$xaxis
   }, ignoreNULL = FALSE)
   
-  yaxis <- eventReactive(input$YGo,{
+  yaxis <- eventReactive(input$allGo,{
     yaxis <- input$yaxis
   }, ignoreNULL = FALSE)
   
@@ -57,7 +57,7 @@ shinyServer <- function(input, output) {
     percentage <- input$percentage
   })
   
-  anno1 <- eventReactive(input$annoGo,{
+  anno1 <- eventReactive(input$allGo,{
     
     # if(is.null(input$anno1))
     # {return()}
@@ -103,7 +103,7 @@ shinyServer <- function(input, output) {
     #scale_x_continuous(breaks=pretty(subgroup, n=30)) +
     #scale_x_discrete(breaks = xbreaks) +
     xlab(xaxis()) + ylab(yaxis()) +
-    scale_x_date(breaks = "3 months", date_labels = "%b\n'%y")+
+    scale_x_date(breaks = "3 months", date_labels = "%b\n%y")+
     ggtitle(heading())+
     theme_classic()+
     theme(plot.title = element_text(size = 14, face = "bold"),
