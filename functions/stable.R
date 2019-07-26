@@ -51,7 +51,7 @@ RunChart = function(measure, subgroup, shiftsens, percentage) {
   base_n = 0
   
   ### Calculate median for first [1:12]
-  dataDF$median = round(median(dataDF$measure[shiftpos:(shiftpos+11)]),0)
+  dataDF$median = median(dataDF$measure[shiftpos:(shiftpos+11)])
   dataDF$baselines = as.numeric(NA) # Create baseline variable but don't calculate until checked for 12 points with no shift
   dataDF$base_n = base_n #Create grouping variable for baselines to disconnect lines
   dataDF$base_label = as.character(NA) #Create labelling variable for baselines
@@ -64,8 +64,8 @@ RunChart = function(measure, subgroup, shiftsens, percentage) {
     dataDF$abovebelow = 0
     dataDF$abovebelow[dataDF$median == 0] = -1   # If the median is zero treat as below
     if (percentage == TRUE) {dataDF$abovebelow[dataDF$median == 100] = 1} #If using percentages and the median is 100, treat as above
-    dataDF$abovebelow[round(dataDF$measure,0) < dataDF$median] = -1
-    dataDF$abovebelow[round(dataDF$measure,0) > dataDF$median] = 1
+    dataDF$abovebelow[round(dataDF$measure,0) < round(dataDF$median,0)] = -1
+    dataDF$abovebelow[round(dataDF$measure,0) > round(dataDF$median,0)] = 1
     
     # Overwrite 12 values at shiftpos with non-useful values if not interrupting baseline
     if(shiftsens == "none") {
@@ -88,7 +88,7 @@ RunChart = function(measure, subgroup, shiftsens, percentage) {
     #overwrite minimum/maximum values lining up along median as non-useful observations
     dataDF = dataDF%>%
       fill(abovebelowpreserved, .direction = "down")%>%
-      mutate(abovebelowpreserved = ifelse((median == 0 & measure == 0) | (median == 100 & measure == 100), 0, abovebelowpreserved))
+      mutate(abovebelowpreserved = ifelse((median == 0 & measure == 0) | (median == 100 & measure == 100 & percentage == TRUE), 0, abovebelowpreserved))
     
     # Overwrite 12 values at shiftpos with non-useful values if not interrupting baseline
     if(shiftsens == "none") {
@@ -116,7 +116,7 @@ RunChart = function(measure, subgroup, shiftsens, percentage) {
       left_join(runlengthDF, by = "runNo")%>%
       mutate(runlength = ifelse(abovebelowpreserved == 0, 0, runlength))%>%
       mutate(runlength = ifelse(median == 0 & measure == 0, 0, runlength))%>% #For cases with run of 0s on 0 median
-      mutate(runlength = ifelse(median == 100 & measure == 100, 0, runlength)) #For cases with run of 100s on 100 median
+      mutate(runlength = ifelse(median == 100 & measure == 100 & percentage == TRUE, 0, runlength)) #For cases with run of 100s on 100 median
     
     # For runs 6 or longer add data to highlights column
     dataDF$highlight = NA
@@ -140,23 +140,23 @@ RunChart = function(measure, subgroup, shiftsens, percentage) {
     # (a) there are 12 data points (not counting blanks or NAs); and
     # (b) the 12 points are stable (i.e. no shifts starting within the 12 points)
     # (c) allow if 12 points start with a shift
-    if (shiftpos+11 <= length(dataDF$measure) & (shiftpos+11 < newshiftpos | newshiftpos == 1))
+    if (shiftpos+11 <= length(dataDF$measure) & (shiftpos+8 < newshiftpos | newshiftpos == 1))
     {dataDF$baselines[shiftpos:(shiftpos+11)] = dataDF$median[shiftpos:(shiftpos+11)]
     # Increment base_n to disconnect baselines
     base_n <- base_n + 1
     dataDF$base_n[shiftpos:length(dataDF$base_n)] = base_n
     # Label baseline
-    dataDF$base_label[shiftpos] = as.character(round(dataDF$median[shiftpos]))
+    dataDF$base_label[shiftpos] = as.character(round(dataDF$median[shiftpos],0))
     }
     
     # If rebase occurs over 9-11 points at end of dataframe, rebase as temporary
-    else if (shiftpos+11 >= length(dataDF$measure))
+    else if (shiftpos+11 >= length(dataDF$measure) & (shiftpos+8 < newshiftpos))
     {d <- length(dataDF$measure) - shiftpos
     # Increment base_n to disconnect baselines
     base_n <- base_n + 1
     dataDF$base_n[shiftpos:length(dataDF$base_n)] = base_n
     # Label baseline (Temporary)
-    dataDF$base_label[shiftpos] = paste0("Temporary: ", round(dataDF$median[shiftpos]))
+    dataDF$base_label[shiftpos] = paste0("Temporary: ", round(dataDF$median[shiftpos],0))
     break
     
     }
@@ -167,7 +167,7 @@ RunChart = function(measure, subgroup, shiftsens, percentage) {
       base_n <- base_n + 1
       dataDF$base_n[shiftpos:(newshiftpos - 1)] = base_n
       #Label baseline
-      dataDF$base_label[shiftpos] = paste0("Temporary: ", round(dataDF$median[shiftpos]))
+      dataDF$base_label[shiftpos] = paste0("Temporary: ", round(dataDF$median[shiftpos],0))
     }
     
     if (newshiftpos == 1) {
@@ -175,7 +175,7 @@ RunChart = function(measure, subgroup, shiftsens, percentage) {
       break} #If newsusshiftpos is 1 there are no more sustained shifts and we can stop looping
     
     ### Recalculate median and extend to end
-    dataDF$median[newshiftpos:length(dataDF$measure)] = round(median(dataDF$measure[newshiftpos:min(newshiftpos+11,(newshiftpos+dataDF$runlength[newshiftpos]-1), nrow(dataDF))]),0)  # Median
+    dataDF$median[newshiftpos:length(dataDF$measure)] = median(dataDF$measure[newshiftpos:min(newshiftpos+11,(newshiftpos+dataDF$runlength[newshiftpos]-1), nrow(dataDF))])  # Median
     dataDF$baselines[newshiftpos:length(dataDF$measure)] = NA
     
     shiftpos = newshiftpos #Make the next sustained shift position the start of the baseline in the next loop
@@ -189,8 +189,8 @@ RunChart = function(measure, subgroup, shiftsens, percentage) {
   dataDF <- dataDF%>%
     dplyr::mutate(trender = case_when(
       row_number() == 1 ~ "none", 
-      measure > lag(measure) ~ "up",
-      measure < lag(measure) ~ "down",
+      round(measure,0) > round(lag(measure),0) ~ "up",
+      round(measure,0) < round(lag(measure),0) ~ "down",
       TRUE ~ "fill"))%>% #Assign trend categories
     mutate(trenderpres = na_if(trender, "fill"))%>% #Coerce values that stay the same to NA for fill function below
     fill(trenderpres, .direction = "down")%>% #Fill periods that stay the same with previous useful observation
@@ -198,8 +198,8 @@ RunChart = function(measure, subgroup, shiftsens, percentage) {
     group_by(trendNo)%>%
     dplyr::mutate(trendlength = sum(trender != "fill"))%>% #Calculate length of trends
     ungroup()%>%
-    mutate(trendind = ifelse(trendlength >= 5, measure,#Flag reliable trends
-                             ifelse(lead(trendlength)>= 5, measure, NA)))%>% #Very lazy but backfills at changepoints
+    mutate(trendind = ifelse(trendlength >= 4, measure,#Flag reliable trends
+                             ifelse(lead(trendlength)>= 4, measure, NA)))%>% #Very lazy but backfills at changepoints
     dplyr::select(-c(trender, trenderpres, trendNo, trendlength))#remove obsolete columns
   
   if (any(is.na(measure))) {
@@ -215,10 +215,3 @@ RunChart = function(measure, subgroup, shiftsens, percentage) {
   
   
 } # End of RunChart function
-
-
-#Debug script
- 
-# shift6 <- read_excel("C:/Users/tobyst01/Documents/MHAIST/D&G/PT/Listapp/Patch/upload.xlsx")
-# debugonce(RunChart)
-# RunChart(shift6$value, shift6$date, percentage = TRUE, shiftsens = "newshiftpos")
