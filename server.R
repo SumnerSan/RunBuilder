@@ -87,15 +87,15 @@ shinyServer <- function(input, output) {
   runplot <- reactive ({
     
     rundata <- rundata()
-    
-  ggplot(rundata) +
-    geom_line(aes(x = subgroup, y=measure, group = 1), colour = "#00a2e5", size = 1) + 
-    geom_point(aes(x = subgroup, y=measure, group = 1), colour = "#00a2e5", size = 2) +  
-    geom_line(aes(x = subgroup, y=median, group = base_n), linetype = "longdash", colour = "#ffcd04") +
-    geom_line(aes(x = subgroup, y=baselines, group = base_n), linetype = "solid", colour = "#ffcd04", size = 1) +
-    geom_point(aes(x = subgroup, y=highlight, group = 1), colour = "#ffcd04", size = 2) +
-    geom_text(aes(x = subgroup, y = median, label = base_label), vjust = 1, hjust = 0) +
-    geom_point(aes(x = subgroup, y=as.numeric(trendind), group = 1), shape = 1, size = 5, colour = "#007db3") +
+  
+  ggplot(rundata, aes(x = subgroup)) +
+    geom_line(aes(y=measure, group = 1), colour = "#00a2e5", size = 1) + 
+    geom_point(aes(y=measure, group = 1), colour = "#00a2e5", size = 2) +  
+    geom_line(aes(y=median, group = base_n), linetype = "longdash", colour = "#ffcd04") +
+    geom_line(aes(y=baselines, group = base_n), linetype = "solid", colour = "#ffcd04", size = 1) +
+    geom_point(aes(y=highlight, group = 1), colour = "#ffcd04", size = 2) +
+    geom_text(aes(y = median, label = base_label), vjust = 1, hjust = 0) +
+    geom_point(aes(y=as.numeric(trendind), group = 1), shape = 1, size = 5, colour = "#007db3") +
     theme(axis.text.x=element_text(angle = 90, hjust = 0), panel.background = element_rect(fill = "transparent")) +
     geom_vline(xintercept = event1(), linetype = "dashed")+
     geom_text(x = event1(), label = stringr::str_wrap(anno1(),30), y = max(as.numeric(rundata$measure))*0.1, vjust = 1)+
@@ -103,7 +103,7 @@ shinyServer <- function(input, output) {
     #scale_x_continuous(breaks=pretty(subgroup, n=30)) +
     #scale_x_discrete(breaks = xbreaks) +
     xlab(xaxis()) + ylab(yaxis()) +
-    scale_x_date(breaks = "3 months", date_labels = "%b\n%y")+
+    scale_x_date(breaks = "3 days", date_labels = "%b")+ #NEEDED - dynamically change based on data range
     ggtitle(heading())+
     theme_classic()+
     theme(plot.title = element_text(size = 14, face = "bold"),
@@ -121,7 +121,7 @@ shinyServer <- function(input, output) {
     
     })
   
-  #output$rundata <- renderTable({rundata()})
+  output$rundata <- renderTable({rundata()})
   
   
   #Download handler produces image of chart named by filename of data upload.
