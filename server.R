@@ -121,7 +121,7 @@ shinyServer <- function(input, output) {
     
     })
   
-  output$rundata <- renderTable({rundata()})
+  #output$rundata <- renderTable({rundata()})
   
   
   #Download handler produces image of chart named by filename of data upload.
