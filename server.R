@@ -103,7 +103,9 @@ shinyServer <- function(input, output) {
     #scale_x_continuous(breaks=pretty(subgroup, n=30)) +
     #scale_x_discrete(breaks = xbreaks) +
     xlab(xaxis()) + ylab(yaxis()) +
-    scale_x_date(breaks = "3 days", date_labels = "%b")+ #NEEDED - dynamically change based on data range
+    scale_x_date(breaks = seq(min(rundata$subgroup), max(rundata$subgroup), length.out = 10),
+                 limits = c(min(rundata$subgroup), max(rundata$subgroup)),
+                 date_labels = "%d %b %Y")+
     ggtitle(heading())+
     theme_classic()+
     theme(plot.title = element_text(size = 14, face = "bold"),
