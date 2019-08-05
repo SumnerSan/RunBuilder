@@ -35,7 +35,7 @@ shinyUI(fluidPage(
            column(3,textInput("xaxis", "X Axis Title", value = " ")),
            column(3,textInput("yaxis", "Y Axis Title", value = " "))),
   fluidRow(column(3,dateInput("event1", "Date for Annotation")),
-           column(3,downloadButton("pullchart", "Download chart")),
-           column(3,actionButton("allGo", "Update inputs")))
+           column(3,actionButton("allGo", "Update inputs")),
+           column(3,downloadButton("pullchart", "Download chart")))
            
   ))
