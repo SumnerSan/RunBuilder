@@ -13,6 +13,7 @@ library(ggplot2)
 library(stringr)
 library(scales)
 library(plyr)
+library(zoo)
 
 ###############################################.
 ## Functions ----
