@@ -89,7 +89,7 @@ shinyServer <- function(input, output) {
     rundata <- rundata()
   
   ggplot(rundata, aes(x = subgroup)) +
-    geom_line(aes(y=measure, group = 1), colour = "#00a2e5", size = 1) + 
+    geom_line(aes(y=measure, group = 1), colour = "blue", size = 1) + 
     geom_point(aes(y=measure, group = 1), colour = "#00a2e5", size = 2) +  
     geom_line(aes(y=median, group = base_n), linetype = "longdash", colour = "#ffcd04") +
     geom_line(aes(y=baselines, group = base_n), linetype = "solid", colour = "#ffcd04", size = 1) +
